@@ -15,7 +15,8 @@ Elige:
 ## Cómo funciona
 
 - Cada cuenta tiene su carpeta en `%USERPROFILE%\.claude-cuentas\<nombre>` y se abre con `CLAUDE_CONFIG_DIR` apuntando ahí. Por eso cada una guarda su propia sesión y sus credenciales.
-- La memoria (`projects`), los agentes, las skills, los plugins, `settings.json` y `CLAUDE.md` **se comparten** con tu configuración normal (`~\.claude`) mediante enlaces (junctions y hardlinks). Todas las cuentas saben lo mismo y lo que configuras en una vale para todas.
+- La memoria (`projects`), los agentes, las skills, los plugins y `CLAUDE.md` **se comparten** con tu configuración normal (`~\.claude`) mediante enlaces (junctions y hardlinks). Todas las cuentas saben lo mismo.
+- `settings.json` empieza enlazado, pero Claude Code lo reescribe al cambiar un ajuste y a partir de ahí cada cuenta tiene el suyo (por ejemplo, otro modelo por defecto). Por eso `claude-cuenta barra` lo edita en todas.
 - Al crear una cuenta se copian tus servidores MCP (solo la lista de servidores, nunca tu identidad).
 - La cuenta con `"carpeta": ""` es tu configuración de siempre, sin tocar nada.
 
@@ -37,7 +38,19 @@ claude-cuenta trabajo           # a partir de ahí, entra directa
 claude-cuenta                   # menú
 claude-cuenta lista
 claude-cuenta trabajo -- -c     # lo que va tras «--» se le pasa a claude (aquí: continuar la última sesión)
+claude-cuenta barra             # muestra la cuenta en la barra de estado de Claude (claude-cuenta barra quitar: la quita)
 ```
+
+## Saber en qué cuenta estás
+
+Con `claude-cuenta barra`, la barra de estado de cada terminal (la línea de abajo, junto al modo de permisos) muestra la cuenta con un color, para no pedirle a la cuenta de la empresa algo que no toca:
+
+```
+ CUENTA: personal | yo@gmail.com - Max (personal)            Opus
+ CUENTA: trabajo | yo@empresa.com - Team Premium (empresa)   Opus
+```
+
+La cuenta se deduce de `CLAUDE_CONFIG_DIR`, así que también funciona si abres `claude` directamente. Por defecto la configuración normal sale en verde y las demás en amarillo; cámbialo con `"color"` en cada cuenta (`rojo`, `verde`, `amarillo`, `azul`, `morado`, `cian`, `gris`). Si ya tenías una barra de estado propia, este comando la sustituye (queda copia en `settings.json.antes_claude-cuenta`).
 
 ## Nombres y etiquetas
 
@@ -47,7 +60,7 @@ Edita `%USERPROFILE%\.claude-cuentas\cuentas.json` (ver `cuentas.ejemplo.json`):
 {
   "cuentas": [
     { "nombre": "personal", "carpeta": "",        "etiqueta": "yo@gmail.com - Max (personal)", "alias": ["yo"] },
-    { "nombre": "trabajo",  "carpeta": "trabajo", "etiqueta": "yo@empresa.com - Team Premium (empresa)" }
+    { "nombre": "trabajo",  "carpeta": "trabajo", "etiqueta": "yo@empresa.com - Team Premium (empresa)", "color": "rojo" }
   ],
   "argumentos_claude": []
 }
@@ -56,6 +69,7 @@ Edita `%USERPROFILE%\.claude-cuentas\cuentas.json` (ver `cuentas.ejemplo.json`):
 - `nombre`: lo que escribes en `claude-cuenta <nombre>`. El menú sigue este orden.
 - `carpeta`: carpeta dentro de `.claude-cuentas`. Puede ser distinta del nombre, así renombras una cuenta sin mover su carpeta (ni romper una sesión abierta). `""` = configuración normal.
 - `alias`: otros nombres que también la abren.
+- `color`: color de la cuenta en la barra de estado.
 - `argumentos_claude`: argumentos que se pasan siempre a `claude`, por ejemplo `["--dangerously-skip-permissions"]` si trabajas sin confirmaciones (bajo tu responsabilidad). Si pasas un modo de permisos a mano tras `--`, manda el tuyo.
 - `compartir` / `compartir_ficheros` (opcionales): qué se comparte con la configuración normal.
 

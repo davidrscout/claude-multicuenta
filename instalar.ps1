@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 $Raiz = Join-Path $env:USERPROFILE '.claude-cuentas'
 $Bin = Join-Path $Raiz 'bin'
 New-Item -ItemType Directory -Force $Bin | Out-Null
-foreach ($f in 'claude-cuenta.cmd', 'claude-cuenta.ps1', 'claude-cuenta-mcp.py') {
+foreach ($f in 'claude-cuenta.cmd', 'claude-cuenta.ps1', 'claude-cuenta-mcp.py', 'claude-cuenta-ajuste.py', 'claude-cuenta-barra.ps1') {
     Copy-Item (Join-Path $PSScriptRoot $f) (Join-Path $Bin $f) -Force
 }
 

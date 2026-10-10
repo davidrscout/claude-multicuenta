@@ -10,6 +10,7 @@ Uso:
   claude-cuenta <nombre>         abre directamente esa cuenta
   claude-cuenta nueva <nombre>   crea una cuenta (después, dentro de Claude, haz /login con esa cuenta)
   claude-cuenta lista            muestra las cuentas
+  claude-cuenta barra            muestra la cuenta en la barra de estado de Claude (barra quitar: la quita)
   claude-cuenta <nombre> -- -c   lo que va después de «--» se le pasa a claude (aquí: continuar la última sesión)
 
 Configuración: %USERPROFILE%\.claude-cuentas\cuentas.json (ver cuentas.ejemplo.json).
@@ -99,6 +100,34 @@ function Crear([string]$nombre) {
     Write-Host "Opcional: ponle nombre y etiqueta en $FicheroConfig" -ForegroundColor DarkGray
 }
 
+function Barra([switch]$Quitar) {
+    # Pone (o quita) la barra de estado con la cuenta en el settings.json de la configuración normal y de cada cuenta
+    $py = Get-Command python -ErrorAction SilentlyContinue
+    if (-not $py) { throw "Hace falta Python para editar settings.json sin riesgo. Instálalo o añade statusLine a mano (ver README)." }
+    $script = Join-Path $PSScriptRoot 'claude-cuenta-barra.ps1'
+    $valor = '--quitar'
+    if (-not $Quitar) {
+        # el valor va por fichero: PowerShell 5 se come las comillas al pasar JSON a un programa
+        $tmp = [IO.Path]::GetTempFileName()
+        $json = @{ type = 'command'; command = ('powershell -NoProfile -ExecutionPolicy Bypass -File "' + $script + '"'); padding = 0 } | ConvertTo-Json -Compress
+        [IO.File]::WriteAllText($tmp, $json, (New-Object Text.UTF8Encoding($false)))
+        $valor = '@' + $tmp
+    }
+    $dirs = @($Base)
+    if (Test-Path $Raiz) { $dirs += (Get-ChildItem $Raiz -Directory | Where-Object { $_.Name -ne 'bin' } | ForEach-Object FullName) }
+    $fallos = 0
+    foreach ($d in $dirs) {
+        $s = Join-Path $d 'settings.json'
+        if (($d -ne $Base) -and -not (Test-Path (Join-Path $d '.claude.json'))) { continue }
+        & python (Join-Path $PSScriptRoot 'claude-cuenta-ajuste.py') $s 'statusLine' $valor
+        if ($LASTEXITCODE -ne 0) { $fallos++ }
+    }
+    if ($tmp) { Remove-Item $tmp -ErrorAction SilentlyContinue }
+    if ($fallos) { throw "Falló en $fallos settings.json (no se han modificado)" }
+    if ($Quitar) { Write-Host "Barra quitada. Copia de cada settings.json en settings.json.antes_claude-cuenta" -ForegroundColor Green }
+    else { Write-Host "Barra puesta. Abre de nuevo las sesiones de Claude para verla. Copia de cada settings.json en settings.json.antes_claude-cuenta" -ForegroundColor Green }
+}
+
 function Abrir([string]$nombre, [string[]]$extra) {
     if ($Alias.ContainsKey($nombre)) { $nombre = $Alias[$nombre] }
     $carp = Carpeta $nombre
@@ -144,7 +173,8 @@ switch ($args2.Count) {
     }
     default {
         $cmd = $args2[0].ToLower()
-        if ($cmd -eq 'lista') { Cuentas | ForEach-Object { Write-Host ("  {0,-20} {1}" -f $_, (Etiqueta $_)) } }
+        if ($cmd -eq 'barra') { if ($args2.Count -ge 2 -and $args2[1] -eq 'quitar') { Barra -Quitar } else { Barra } }
+        elseif ($cmd -eq 'lista') { Cuentas | ForEach-Object { Write-Host ("  {0,-20} {1}" -f $_, (Etiqueta $_)) } }
         elseif ($cmd -eq 'nueva') { if ($args2.Count -lt 2) { throw "Uso: claude-cuenta nueva <nombre>" }; Crear $args2[1].ToLower(); Abrir $args2[1].ToLower() $extra }
         else { Abrir $cmd $extra }
     }

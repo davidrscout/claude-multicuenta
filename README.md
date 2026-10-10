@@ -73,10 +73,25 @@ Si quieres que una cuenta **no** comparta la memoria, borra el enlace `projects`
 
 - Solo Windows. En macOS y Linux basta con un alias: `CLAUDE_CONFIG_DIR=~/.claude-trabajo claude`.
 - Las credenciales de cada cuenta están en su carpeta (`.credentials.json`). No subas `.claude-cuentas` a ningún sitio.
-- Respeta las condiciones de cada plan: usa cada cuenta para aquello a lo que está destinada.
+
+## Uso permitido: lo que dicen los términos de Anthropic
+
+Esta herramienta **solo** cambia la carpeta de configuración con la que arranca `claude`. No automatiza nada, no rota cuentas, no inicia sesión por ti y no copia ni comparte credenciales: cada cuenta se abre con su propio `/login`, por el flujo oficial de Anthropic, y la usa una persona delante del teclado. Úsala así. Resumen de las normas aplicables (lee siempre el texto original, que es el que vale y puede cambiar):
+
+- **Qué términos se aplican.** Las cuentas Free, Pro y Max se rigen por los [Términos de servicio del consumidor](https://www.anthropic.com/legal/consumer-terms); Team, Enterprise y API, por los [Términos comerciales](https://www.anthropic.com/legal/commercial-terms) ([Legal y cumplimiento de Claude Code](https://code.claude.com/docs/es/legal-and-compliance)).
+- **Nada de acceso automatizado con cuentas de consumidor.** Los Términos del consumidor (sección 3) prohíben acceder a los Servicios «through automated or non-human means, whether through a bot, script, or otherwise», salvo con una clave de API de Anthropic o cuando Anthropic lo permita explícitamente. No uses estas cuentas para bots, tareas desatendidas o procesos que se lancen solos; para eso está la API con clave de [Claude Console](https://platform.claude.com/).
+- **Cada cuenta es de una persona.** No puedes compartir tus credenciales ni poner tu cuenta a disposición de otra persona (Términos del consumidor, sección 2). Eres responsable de todo lo que se haga con ella.
+- **Uso ordinario e individual.** Los límites anunciados de Pro y Max «asumen el uso ordinario e individual de Claude Code y el Agent SDK». No uses varias cuentas para saltarte límites de uso: los términos prohíben eludir los sistemas o medidas de protección de Anthropic.
+- **El login de Claude.ai es solo para el flujo de Anthropic.** No se permite que terceros ofrezcan inicio de sesión de Claude.ai en sus aplicaciones, enruten peticiones con credenciales Free/Pro/Max en nombre de otros usuarios ni recopilen, almacenen o intermedien credenciales o tokens de sesión. Quien construya un producto, incluido el Agent SDK, debe usar clave de API.
+- **Planes de empresa.** Si una cuenta es de Team o Enterprise, úsala para lo que tu organización o el programa que te la dio permitan.
+- **Consecuencias.** Anthropic puede suspender o cancelar cuentas que incumplan los términos, y puede hacerlo sin aviso previo.
+
+Este proyecto no está afiliado a Anthropic ni respaldado por ella. «Claude» y «Claude Code» son marcas de Anthropic.
 
 ---
 
 **English:** run several Claude Code accounts side by side on Windows. Each one gets its own `CLAUDE_CONFIG_DIR` (its own login) while sharing memory, agents, skills, plugins, `settings.json` and `CLAUDE.md` with your normal `~\.claude` through junctions and hardlinks. Install with `instalar.ps1`, then `claude-cuenta nueva work`, `/login`, and from then on `claude-cuenta work`. Names, labels and order live in `%USERPROFILE%\.claude-cuentas\cuentas.json`.
+
+It only switches the config folder: it does not automate anything, rotate accounts or handle credentials. Use each account interactively, by its owner, under Anthropic's terms: the [Consumer Terms](https://www.anthropic.com/legal/consumer-terms) forbid automated or non-human access with Free/Pro/Max accounts (except via an API key or where explicitly permitted) and sharing your account, Pro/Max limits assume ordinary individual use, and third parties may not broker Claude.ai logins or route requests through subscription credentials ([Claude Code legal and compliance](https://code.claude.com/docs/en/legal-and-compliance)). Not affiliated with or endorsed by Anthropic.
 
 Licencia MIT.

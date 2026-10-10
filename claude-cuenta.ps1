@@ -11,6 +11,7 @@ Uso:
   claude-cuenta nueva <nombre>   crea una cuenta (después, dentro de Claude, haz /login con esa cuenta)
   claude-cuenta lista            muestra las cuentas
   claude-cuenta barra            muestra la cuenta en la barra de estado de Claude (barra quitar: la quita)
+  claude-cuenta color <cuenta> <color>   cambia su color en la barra (rojo, verde, amarillo, azul, morado, cian, gris, blanco o #RRGGBB)
   claude-cuenta <nombre> -- -c   lo que va después de «--» se le pasa a claude (aquí: continuar la última sesión)
 
 Configuración: %USERPROFILE%\.claude-cuentas\cuentas.json (ver cuentas.ejemplo.json).
@@ -128,6 +129,27 @@ function Barra([switch]$Quitar) {
     else { Write-Host "Barra puesta. Abre de nuevo las sesiones de Claude para verla. Copia de cada settings.json en settings.json.antes_claude-cuenta" -ForegroundColor Green }
 }
 
+function PonerColor([string]$nombre, [string]$color) {
+    # Cambia el color de una cuenta en cuentas.json (lo usa la barra de estado)
+    $validos = @('rojo', 'verde', 'amarillo', 'azul', 'morado', 'cian', 'gris', 'blanco')
+    if (($validos -notcontains $color.ToLower()) -and ($color -notmatch '^#?[0-9a-fA-F]{6}$')) { throw "Color no válido: usa $($validos -join ', ') o #RRGGBB" }
+    if ($color -match '^[0-9a-fA-F]{6}$') { $color = '#' + $color }
+    if ($Alias.ContainsKey($nombre)) { $nombre = $Alias[$nombre] }
+    $cfg = if (Test-Path $FicheroConfig) { Get-Content $FicheroConfig -Raw -Encoding UTF8 | ConvertFrom-Json } else { [pscustomobject]@{ cuentas = @() } }
+    if (-not $cfg.cuentas) { $cfg | Add-Member -NotePropertyName cuentas -NotePropertyValue @() -Force }
+    $c = $cfg.cuentas | Where-Object { $_.nombre -eq $nombre } | Select-Object -First 1
+    if (-not $c) {
+        $carp = Carpeta $nombre
+        if (($carp -ne '') -and -not (Test-Path (Join-Path $Raiz $carp))) { throw "No existe la cuenta «$nombre»" }
+        $c = [pscustomobject]@{ nombre = $nombre; carpeta = $carp; etiqueta = (Etiqueta $nombre) }
+        $cfg.cuentas = @($cfg.cuentas) + $c
+    }
+    $c | Add-Member -NotePropertyName color -NotePropertyValue $color -Force
+    Copy-Item $FicheroConfig ($FicheroConfig + '.antes') -ErrorAction SilentlyContinue
+    [IO.File]::WriteAllText($FicheroConfig, ($cfg | ConvertTo-Json -Depth 10), (New-Object Text.UTF8Encoding($false)))
+    Write-Host "Color de «$nombre»: $color (se ve en la barra en la próxima actualización)" -ForegroundColor Green
+}
+
 function Abrir([string]$nombre, [string[]]$extra) {
     if ($Alias.ContainsKey($nombre)) { $nombre = $Alias[$nombre] }
     $carp = Carpeta $nombre
@@ -174,6 +196,7 @@ switch ($args2.Count) {
     default {
         $cmd = $args2[0].ToLower()
         if ($cmd -eq 'barra') { if ($args2.Count -ge 2 -and $args2[1] -eq 'quitar') { Barra -Quitar } else { Barra } }
+        elseif ($cmd -eq 'color') { if ($args2.Count -lt 3) { throw "Uso: claude-cuenta color <cuenta> <color>" }; PonerColor $args2[1].ToLower() $args2[2] }
         elseif ($cmd -eq 'lista') { Cuentas | ForEach-Object { Write-Host ("  {0,-20} {1}" -f $_, (Etiqueta $_)) } }
         elseif ($cmd -eq 'nueva') { if ($args2.Count -lt 2) { throw "Uso: claude-cuenta nueva <nombre>" }; Crear $args2[1].ToLower(); Abrir $args2[1].ToLower() $extra }
         else { Abrir $cmd $extra }

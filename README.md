@@ -39,6 +39,7 @@ claude-cuenta                   # menú
 claude-cuenta lista
 claude-cuenta trabajo -- -c     # lo que va tras «--» se le pasa a claude (aquí: continuar la última sesión)
 claude-cuenta barra             # muestra la cuenta en la barra de estado de Claude (claude-cuenta barra quitar: la quita)
+claude-cuenta color trabajo azul   # cambia el color de una cuenta en la barra (nombre o #RRGGBB)
 ```
 
 ## Saber en qué cuenta estás
@@ -50,7 +51,7 @@ Con `claude-cuenta barra`, la barra de estado de cada terminal (una fila propia 
 ● trabajo · yo@empresa.com - Team Premium (empresa)  Opus
 ```
 
-La cuenta se deduce de `CLAUDE_CONFIG_DIR`, así que también funciona si abres `claude` directamente. El texto de la configuración normal sale en verde y el de las demás en amarillo; cámbialo con `"color"` en cada cuenta (`rojo`, `verde`, `amarillo`, `azul`, `morado`, `cian`, `gris` o un color exacto como `#5BA8FF`, que necesita una terminal con color real como Windows Terminal). Si ya tenías una barra de estado propia, este comando la sustituye (queda copia en `settings.json.antes_claude-cuenta`).
+La cuenta se deduce de `CLAUDE_CONFIG_DIR`, así que también funciona si abres `claude` directamente. El texto de la configuración normal sale en verde y el de las demás en amarillo; cámbialo con `claude-cuenta color <cuenta> <color>` o con `"color"` en cada cuenta (`rojo`, `verde`, `amarillo`, `azul`, `morado`, `cian`, `gris` o un color exacto como `#5BA8FF`, que necesita una terminal con color real como Windows Terminal). Si ya tenías una barra de estado propia, este comando la sustituye (queda copia en `settings.json.antes_claude-cuenta`).
 
 ## Nombres y etiquetas
 

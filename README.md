@@ -50,7 +50,7 @@ Con `claude-cuenta barra`, la barra de estado de cada terminal (la línea de aba
  CUENTA: trabajo | yo@empresa.com - Team Premium (empresa)   Opus
 ```
 
-La cuenta se deduce de `CLAUDE_CONFIG_DIR`, así que también funciona si abres `claude` directamente. Por defecto la configuración normal sale en verde y las demás en amarillo; cámbialo con `"color"` en cada cuenta (`rojo`, `verde`, `amarillo`, `azul`, `morado`, `cian`, `gris`). Si ya tenías una barra de estado propia, este comando la sustituye (queda copia en `settings.json.antes_claude-cuenta`).
+La cuenta se deduce de `CLAUDE_CONFIG_DIR`, así que también funciona si abres `claude` directamente. Por defecto la configuración normal sale en verde y las demás en amarillo; cámbialo con `"color"` en cada cuenta (`rojo`, `verde`, `amarillo`, `azul`, `morado`, `cian`, `gris` o un color exacto como `#5BA8FF`, que necesita una terminal con color real como Windows Terminal). Si ya tenías una barra de estado propia, este comando la sustituye (queda copia en `settings.json.antes_claude-cuenta`).
 
 ## Nombres y etiquetas
 
@@ -69,7 +69,7 @@ Edita `%USERPROFILE%\.claude-cuentas\cuentas.json` (ver `cuentas.ejemplo.json`):
 - `nombre`: lo que escribes en `claude-cuenta <nombre>`. El menú sigue este orden.
 - `carpeta`: carpeta dentro de `.claude-cuentas`. Puede ser distinta del nombre, así renombras una cuenta sin mover su carpeta (ni romper una sesión abierta). `""` = configuración normal.
 - `alias`: otros nombres que también la abren.
-- `color`: color de la cuenta en la barra de estado.
+- `color`: color de la cuenta en la barra de estado (nombre o `#RRGGBB`).
 - `argumentos_claude`: argumentos que se pasan siempre a `claude`, por ejemplo `["--dangerously-skip-permissions"]` si trabajas sin confirmaciones (bajo tu responsabilidad). Si pasas un modo de permisos a mano tras `--`, manda el tuyo.
 - `compartir` / `compartir_ficheros` (opcionales): qué se comparte con la configuración normal.
 

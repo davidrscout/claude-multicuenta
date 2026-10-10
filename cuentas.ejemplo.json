@@ -1,8 +1,8 @@
 {
   "cuentas": [
-    { "nombre": "personal", "carpeta": "",        "etiqueta": "yo@gmail.com - Max (personal)", "color": "verde" },
-    { "nombre": "trabajo",  "carpeta": "trabajo", "etiqueta": "yo@empresa.com - Team Premium (empresa)", "color": "rojo" },
-    { "nombre": "soporte",  "carpeta": "soporte", "etiqueta": "soporte@empresa.com - Team Standard (empresa)", "color": "amarillo" }
+    { "nombre": "personal", "carpeta": "",        "etiqueta": "yo@gmail.com - Max (personal)", "color": "amarillo" },
+    { "nombre": "trabajo",  "carpeta": "trabajo", "etiqueta": "yo@empresa.com - Team Premium (empresa)", "color": "#5BA8FF" },
+    { "nombre": "soporte",  "carpeta": "soporte", "etiqueta": "soporte@empresa.com - Team Standard (empresa)", "color": "azul" }
   ],
   "argumentos_claude": [],
   "compartir": ["projects", "agents", "skills", "plugins"],

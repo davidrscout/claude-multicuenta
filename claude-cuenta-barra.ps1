@@ -30,11 +30,17 @@ if (Test-Path $config) {
     }
 }
 
-# colores: verde para la configuración normal, amarillo para el resto, salvo que cuentas.json diga otro
+# colores: verde para la configuración normal, amarillo para el resto, salvo que cuentas.json diga otro (nombre o #RRGGBB)
 $codigos = @{ rojo = '41;97'; verde = '42;30'; amarillo = '43;30'; azul = '44;97'; morado = '45;97'; cian = '46;30'; gris = '100;97' }
 if (-not $color) { $color = if ($carpeta) { 'amarillo' } else { 'verde' } }
-$cod = $codigos[$color.ToLower()]
-if (-not $cod) { $cod = $codigos['amarillo'] }
+if ($color -match '^#?([0-9a-fA-F]{6})$') {
+    # color exacto en hexadecimal (#RRGGBB) con texto oscuro; necesita una terminal con color real (Windows Terminal)
+    $h = $Matches[1]
+    $cod = '48;2;{0};{1};{2};38;2;6;7;13' -f [Convert]::ToInt32($h.Substring(0, 2), 16), [Convert]::ToInt32($h.Substring(2, 2), 16), [Convert]::ToInt32($h.Substring(4, 2), 16)
+} else {
+    $cod = $codigos[$color.ToLower()]
+    if (-not $cod) { $cod = $codigos['amarillo'] }
+}
 
 $texto = " CUENTA: $nombre "
 if ($etiqueta) { $texto += "| $etiqueta " }

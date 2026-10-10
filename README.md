@@ -43,14 +43,14 @@ claude-cuenta barra             # muestra la cuenta en la barra de estado de Cla
 
 ## Saber en qué cuenta estás
 
-Con `claude-cuenta barra`, la barra de estado de cada terminal (la línea de abajo, junto al modo de permisos) muestra la cuenta con un color, para no pedirle a la cuenta de la empresa algo que no toca:
+Con `claude-cuenta barra`, la barra de estado de cada terminal (una fila propia justo encima del indicador de modo de permisos; Claude Code no deja ponerla en la misma fila) muestra la cuenta en color, para no pedirle a la cuenta de la empresa algo que no toca:
 
 ```
- CUENTA: personal | yo@gmail.com - Max (personal)            Opus
- CUENTA: trabajo | yo@empresa.com - Team Premium (empresa)   Opus
+● personal · yo@gmail.com - Max (personal)  Opus
+● trabajo · yo@empresa.com - Team Premium (empresa)  Opus
 ```
 
-La cuenta se deduce de `CLAUDE_CONFIG_DIR`, así que también funciona si abres `claude` directamente. Por defecto la configuración normal sale en verde y las demás en amarillo; cámbialo con `"color"` en cada cuenta (`rojo`, `verde`, `amarillo`, `azul`, `morado`, `cian`, `gris` o un color exacto como `#5BA8FF`, que necesita una terminal con color real como Windows Terminal). Si ya tenías una barra de estado propia, este comando la sustituye (queda copia en `settings.json.antes_claude-cuenta`).
+La cuenta se deduce de `CLAUDE_CONFIG_DIR`, así que también funciona si abres `claude` directamente. El texto de la configuración normal sale en verde y el de las demás en amarillo; cámbialo con `"color"` en cada cuenta (`rojo`, `verde`, `amarillo`, `azul`, `morado`, `cian`, `gris` o un color exacto como `#5BA8FF`, que necesita una terminal con color real como Windows Terminal). Si ya tenías una barra de estado propia, este comando la sustituye (queda copia en `settings.json.antes_claude-cuenta`).
 
 ## Nombres y etiquetas
 
